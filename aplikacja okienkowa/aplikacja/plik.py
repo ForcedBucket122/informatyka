@@ -1,13 +1,13 @@
 from tkinter import *
-
 def press():
-    moj_tekst.config(text="Do widzenia",bg="blue")
-
-root = Tk()
-root.geometry("400x300")
-moj_tekst = Label(root,text="Dzień dobry",bg="yellow")
-moj_przycisk = Button(root,text="ok",width="200",command=press)
-moj_tekst.pack(side=RIGHT)
-moj_przycisk.pack()
-
-root.mainloop()
+    etykieta.config(text="inny")
+    etykieta["bg"]="green"
+glowna=Tk()
+glowna.geometry("600x400")
+zmienny_tekst=StringVar()
+etykieta=Label(glowna,textvariable=zmienny_tekst,bg="red",width="20",height="10",fg="yellow",justify=CENTER)
+przycisk = Button(glowna,text="OK",command=press)
+zmienny_tekst.set("Ustaw tekst w etykiecie")
+etykieta.pack(side=LEFT)
+przycisk.pack(side=LEFT)
+glowna.mainloop()
