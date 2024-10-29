@@ -1,39 +1,51 @@
-import tkinter as tk
-from tkinter import ttk
+from tkinter import *
+from tkinter.ttk import Combobox
 
 def przelicz():
-    try:
-        pln = float(entry_pln.get())
-        kurs = float(entry_kurs.get())
-        eur = pln / kurs
-        wynik_label.config(text=f"{eur:.2f} EUR")
-    except ValueError:
-        wynik_label.config(text="Błąd: Wprowadź poprawne liczby")
+    kwota = float(entry_kwota.get())
+    waluta_z = waluta_wej.get()
+    waluta_na = waluta_wyj.get()
 
-# Tworzenie głównego okna
-root = tk.Tk()
-root.title("Kalkulator PLN na EUR")
+    kursy = {
+        'PLN': {'EUR': 4.30, 'USD': 3.94, 'CHF': 4.61, 'GBP': 5.18},
+        'EUR': {'PLN': 4.30, 'USD': 1.14, 'CHF': 1.07, 'GBP': 0.86},
+        'USD': {'PLN': 3.94, 'EUR': 0.88, 'CHF': 0.94, 'GBP': 0.76},
+        'CHF': {'PLN': 4.61, 'EUR': 0.93, 'USD': 1.06, 'GBP': 0.81},
+        'GBP': {'PLN': 5.18, 'EUR': 1.16, 'USD': 1.31, 'CHF': 1.23}
+    }
 
-# Etykiety i pola wejściowe
-label_pln = ttk.Label(root, text="Kwota w PLN:")
-label_pln.grid(column=0, row=0, padx=10, pady=10)
+    if waluta_z == 'PLN':
+        wynik = kwota / kursy[waluta_z][waluta_na]
+    else:
+        wynik = kwota * kursy[waluta_z][waluta_na]
 
-entry_pln = ttk.Entry(root)
-entry_pln.grid(column=1, row=0, padx=10, pady=10)
+    label_wynik.config(text=f'{wynik:.2f} {waluta_na}')
 
-label_kurs = ttk.Label(root, text="Kurs wymiany (PLN/EUR):")
-label_kurs.grid(column=0, row=1, padx=10, pady=10)
+glowne_okno = Tk()
+glowne_okno.title("Przelicznik walut")
+glowne_okno.geometry("500x300")
 
-entry_kurs = ttk.Entry(root)
-entry_kurs.grid(column=1, row=1, padx=10, pady=10)
+label_kwota = Label(glowne_okno, text="Kwota:")
+label_kwota.pack()
+entry_kwota = Entry(glowne_okno)
+entry_kwota.pack()
 
-# Przycisk do przeliczania
-przelicz_button = ttk.Button(root, text="Przelicz", command=przelicz)
-przelicz_button.grid(column=0, row=2, columnspan=2, pady=10)
+label_waluta_wej = Label(glowne_okno, text="Z waluty:")
+label_waluta_wej.pack()
+waluta_wej = Combobox(glowne_okno, values=['PLN', 'EUR', 'USD', 'CHF', 'GBP'], state='readonly')
+waluta_wej.set('PLN')
+waluta_wej.pack()
 
-# Etykieta do wyświetlania wyniku
-wynik_label = ttk.Label(root, text="Wynik w EUR:")
-wynik_label.grid(column=0, row=3, columnspan=2, pady=10)
+label_waluta_wyj = Label(glowne_okno, text="Na walutę:")
+label_waluta_wyj.pack()
+waluta_wyj = Combobox(glowne_okno, values=['EUR', 'USD', 'CHF', 'GBP'], state='readonly')
+waluta_wyj.set('EUR')
+waluta_wyj.pack()
 
-# Uruchomienie aplikacji
-root.mainloop()
+button_przelicz = Button(glowne_okno, text="Przelicz", command=przelicz)
+button_przelicz.pack()
+
+label_wynik = Label(glowne_okno, text="")
+label_wynik.pack()
+
+glowne_okno.mainloop()
